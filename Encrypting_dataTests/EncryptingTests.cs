@@ -40,21 +40,31 @@ namespace Encrypting_data.Tests
         }
 
         [TestMethod()]
-        public void SymmetricDecryptionTest()
+        [DataRow(@"Hello world!")]
+        [DataRow(@"1234567890")]
+        [DataRow(@"!@#$%^&*()_+-=':;,.<>|")]
+        [DataRow(@"Привет мир! ")]
+        public void AsymmetricEncryptionTest(string data)
         {
-            Assert.Fail();
-        }
+            // Создали ключ
+            byte[] key = Encrypting.GenerateKey(Encrypting.RSA);
 
-        [TestMethod()]
-        public void AsymmetricEncryptionTest()
-        {
-            Assert.Fail();
-        }
+            // Зашифровали
+            byte[] encryptData = Encrypting.AsymmetricEncryption(data, key);
 
-        [TestMethod()]
-        public void AsymmetricDecryptionTest()
-        {
-            Assert.Fail();
+            // Преобразовать строку data в байтовый массив
+            byte[] clearData = Encoding.UTF8.GetBytes(data);
+
+            // Попробовали сравнить с исходным: (если true - незашифрован)
+            Assert.IsFalse(encryptData.SequenceEqual(clearData), "byte[] encryptData and byte[] clearData are Equal");
+
+            // Попробуем дешифровать другим ключом (если true - ошибка в шифровании, подходит любой ключ)
+            string decyptBadData = Encrypting.AsymmetricDecryption(encryptData, Encrypting.GenerateKey(Encrypting.RSA));
+            Assert.IsFalse(decyptBadData == data, "Wrong key - correct");
+
+            // Попробуем дешифровать верным ключом (если false - где-то косяк в шифровании / дешифровании)
+            string decryptData = Encrypting.AsymmetricDecryption(encryptData, key);
+            Assert.IsTrue(decryptData == data, "Source is not equal to decrypted");
         }
     }
 }
