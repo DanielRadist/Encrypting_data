@@ -28,15 +28,15 @@ namespace Encrypting_data.Tests
             byte[] clearData = Encoding.UTF8.GetBytes(data);
 
             // Попробовали сравнить с исходным: (если true - незашифрован)
-            Assert.IsTrue(encryptData.SequenceEqual(clearData), "byte[] encryptData and byte[] clearData are Equal");
+            Assert.IsFalse(encryptData.SequenceEqual(clearData), "byte[] encryptData and byte[] clearData are Equal");
 
             // Попробуем дешифровать другим ключом (если true - ошибка в шифровании, подходит любой ключ)
             string decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKey(Encrypting.DES));
-            Assert.IsTrue(decyptBadData == data, "Wrong key - correct");
+            Assert.IsFalse(decyptBadData == data, "Wrong key - correct");
 
             // Попробуем дешифровать верным ключом (если false - где-то косяк в шифровании / дешифровании)
             string decryptData = Encrypting.SymmetricDecryption(encryptData, key);
-            Assert.IsFalse(decryptData == data, "Source is not equal to decrypted");
+            Assert.IsTrue(decryptData == data, "Source is not equal to decrypted");
         }
 
         [TestMethod()]
