@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Encrypting_data", "Encrypting_data\Encrypting_data.csproj", "{6DFF327A-2161-48CF-B8CF-2D04B00F29BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Encrypting_dataTests", "Encrypting_dataTests\Encrypting_dataTests.csproj", "{119FF15F-F5EA-49F1-AF1A-8037F74961C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6DFF327A-2161-48CF-B8CF-2D04B00F29BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DFF327A-2161-48CF-B8CF-2D04B00F29BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DFF327A-2161-48CF-B8CF-2D04B00F29BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{119FF15F-F5EA-49F1-AF1A-8037F74961C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{119FF15F-F5EA-49F1-AF1A-8037F74961C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{119FF15F-F5EA-49F1-AF1A-8037F74961C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{119FF15F-F5EA-49F1-AF1A-8037F74961C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

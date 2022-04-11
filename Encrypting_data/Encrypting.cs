@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Encrypting_data
 {
-    internal static class Encrypting
+    public static class Encrypting
     {
         // Symmetric:
         public static byte[] SymmetricEncryption(string data, byte[] key)
