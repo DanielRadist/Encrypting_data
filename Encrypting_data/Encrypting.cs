@@ -16,7 +16,28 @@ namespace Encrypting_data
         // Symmetric:
         public static byte[] SymmetricEncryption(string data, byte[] key)
         {
-            return null;
+            // Преобразовать строку data в байтовый массив
+            byte[] сlearData = Encoding.UTF8.GetBytes(data);
+
+            // Создать алгоритм шифрования
+            SymmetricAlgorithm algorithm = SymmetricAlgorithm.Create(DES);
+            algorithm.Key = key;
+
+            // Зашифровать информацию
+            MemoryStream Target = new MemoryStream();
+
+            // Сгенерировать случайный вектор инициализации (IV)
+            // для использования с алгоритмом
+            algorithm.GenerateIV();
+            Target.Write(algorithm.IV, 0, algorithm.IV.Length);
+
+            // Зашифровать реальные данные
+            CryptoStream cs = new CryptoStream(Target, algorithm.CreateEncryptor(), CryptoStreamMode.Write);
+            cs.Write(сlearData, 0, сlearData.Length);
+            cs.FlushFinalBlock();
+
+            // Вернуть зашифрованный поток данных в виде байтового массива
+            return Target.ToArray();
         }
 
         public static string SymmetricDecryption(byte[] data, byte[] key)
