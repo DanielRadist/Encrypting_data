@@ -19,7 +19,7 @@ namespace Encrypting_data.Tests
         public void SymmetricEncryptionTest(string data)
         {
             // Создали ключ
-            byte[] key = Encrypting.GenerateKey(Encrypting.AES);
+            byte[] key = Encrypting.GenerateKeyAES();
 
             // Зашифровали
             byte[] encryptData = Encrypting.SymmetricEncryption(data, key);
@@ -42,7 +42,7 @@ namespace Encrypting_data.Tests
         public void SymmetricDecryptionTest(string data)
         {
             // Создали ключ
-            byte[] key = Encrypting.GenerateKey(Encrypting.AES);
+            byte[] key = Encrypting.GenerateKeyAES();
 
             // Зашифровали
             byte[] encryptData = Encrypting.SymmetricEncryption(data, key);
@@ -51,7 +51,7 @@ namespace Encrypting_data.Tests
             byte[] clearData = Encoding.UTF8.GetBytes(data);
 
             // Попробуем дешифровать другим ключом (если true - ошибка в шифровании, подходит любой ключ)
-            string decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKey(Encrypting.AES));
+            string decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKeyAES());
             Assert.IsFalse(decyptBadData == data, "Wrong key - correct");
 
             // Попробуем дешифровать верным ключом (если false - где-то косяк в шифровании / дешифровании)
@@ -67,7 +67,7 @@ namespace Encrypting_data.Tests
         public void AsymmetricDecryptionTest(string data)
         {
             // Создали ключ
-            byte[] key = Encrypting.GenerateKey(Encrypting.RSA);
+            byte[] key = Encrypting.GenerateKeyAES();
 
             // Зашифровали
             byte[] encryptData = Encrypting.AsymmetricEncryption(data, key);
@@ -90,7 +90,7 @@ namespace Encrypting_data.Tests
         public void AsymmetricEncryptionTest(string data)
         {
             // Создали ключ
-            byte[] key = Encrypting.GenerateKey(Encrypting.RSA);
+            byte[] key = Encrypting.GenerateKeyAES();
 
             // Зашифровали
             byte[] encryptData = Encrypting.AsymmetricEncryption(data, key);
