@@ -19,13 +19,16 @@ namespace Encrypting_data.Tests
         public void SymmetricEncryptionTest(string data)
         {
             // Создали ключ
-            byte[] key = Encrypting.GenerateKey(Encrypting.DES);
+            byte[] key = Encrypting.GenerateKey(Encrypting.AES);
 
             // Зашифровали
             byte[] encryptData = Encrypting.SymmetricEncryption(data, key);
 
             // Преобразовать строку data в байтовый массив
             byte[] clearData = Encoding.UTF8.GetBytes(data);
+
+            // Были проблемы с шифрованием
+            Assert.IsFalse(encryptData == null || encryptData.Length < 1);
 
             // Попробовали сравнить с исходным: (если true - незашифрован)
             Assert.IsFalse(encryptData.SequenceEqual(clearData), "byte[] encryptData and byte[] clearData are Equal");
@@ -39,7 +42,7 @@ namespace Encrypting_data.Tests
         public void SymmetricDecryptionTest(string data)
         {
             // Создали ключ
-            byte[] key = Encrypting.GenerateKey(Encrypting.DES);
+            byte[] key = Encrypting.GenerateKey(Encrypting.AES);
 
             // Зашифровали
             byte[] encryptData = Encrypting.SymmetricEncryption(data, key);
@@ -48,7 +51,7 @@ namespace Encrypting_data.Tests
             byte[] clearData = Encoding.UTF8.GetBytes(data);
 
             // Попробуем дешифровать другим ключом (если true - ошибка в шифровании, подходит любой ключ)
-            string decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKey(Encrypting.DES));
+            string decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKey(Encrypting.AES));
             Assert.IsFalse(decyptBadData == data, "Wrong key - correct");
 
             // Попробуем дешифровать верным ключом (если false - где-то косяк в шифровании / дешифровании)
@@ -71,6 +74,9 @@ namespace Encrypting_data.Tests
 
             // Преобразовать строку data в байтовый массив
             byte[] clearData = Encoding.UTF8.GetBytes(data);
+
+            // Были проблемы с шифрованием
+            Assert.IsFalse(encryptData == null || encryptData.Length < 1);
 
             // Попробовали сравнить с исходным: (если true - незашифрован)
             Assert.IsFalse(encryptData.SequenceEqual(clearData), "byte[] encryptData and byte[] clearData are Equal");
