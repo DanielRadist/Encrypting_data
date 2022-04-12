@@ -140,6 +140,10 @@ namespace Encrypting_data
             return Convert.ToString(Encoding.UTF8.GetString(ClearData));
         }
 
+        /// <summary>
+        /// Genarate key RSA
+        /// </summary>
+        /// <returns>Key - public key, value - private key</returns>
         public static KeyValuePair<byte[], byte[]> GenerateKeyRSA()
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
