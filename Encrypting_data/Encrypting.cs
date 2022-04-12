@@ -10,39 +10,81 @@ namespace Encrypting_data
 {
     public static class Encrypting
     {
-        public const string DES = "DES";
+        public const string AES = "AES";
         public const string RSA = "RSA";
 
         // Symmetric:
         public static byte[] SymmetricEncryption(string data, byte[] key)
         {
-            // Преобразовать строку data в байтовый массив
-            byte[] сlearData = Encoding.UTF8.GetBytes(data);
+            byte[] clearData = Encoding.UTF8.GetBytes(data);
+            //data = Encoding.UTF8.GetString(tmp);
 
-            // Создать алгоритм шифрования
-            SymmetricAlgorithm algorithm = SymmetricAlgorithm.Create(DES);
-            algorithm.Key = key;
+            try
+            {
+                // Создать алгоритм шифрования
+                Aes aes = Aes.Create(AES);
+                aes.Key = key;
 
-            // Зашифровать информацию
-            MemoryStream Target = new MemoryStream();
+                // Зашифровать информацию
+                MemoryStream target = new MemoryStream();
 
-            // Сгенерировать случайный вектор инициализации (IV)
-            // для использования с алгоритмом
-            algorithm.GenerateIV();
-            Target.Write(algorithm.IV, 0, algorithm.IV.Length);
+                // Сгенерировать случайный вектор инициализации (IV)
+                // для использования с алгоритмом
+                aes.GenerateIV();
+                target.Write(aes.IV, 0, aes.IV.Length);
 
-            // Зашифровать реальные данные
-            CryptoStream cs = new CryptoStream(Target, algorithm.CreateEncryptor(), CryptoStreamMode.Write);
-            cs.Write(сlearData, 0, сlearData.Length);
-            cs.FlushFinalBlock();
+                // Зашифровать реальные данные
+                CryptoStream cryptoStream = new CryptoStream(target, aes.CreateEncryptor(), CryptoStreamMode.Write);
+                cryptoStream.Write(clearData, 0, clearData.Length);
+                cryptoStream.FlushFinalBlock();
+                /*
+                target.Write(iv, 0, iv.Length);
+                CryptoStream cryptoStream = new CryptoStream(target, aes.CreateEncryptor(), CryptoStreamMode.Write);
+                StreamWriter encryptWriter = new(cryptoStream);
+                encryptWriter.Write(data);*/
 
-            // Вернуть зашифрованный поток данных в виде байтового массива
-            return Target.ToArray();
+                // Вернуть зашифрованный поток данных в виде байтового массива
+                return target.ToArray();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"The encryption failed. {ex}");
+                return null;
+            }
         }
 
         public static string SymmetricDecryption(byte[] data, byte[] key)
         {
-            return null;
+            try
+            {
+                // Создать алгоритм
+                Aes aes = Aes.Create(AES);
+                aes.Key = key;
+
+                // Расшифровать информацию
+                MemoryStream target = new MemoryStream();
+
+                // Прочитать вектор инициализации (IV)
+                // и инициализировать им алгоритм
+                byte[] iv = new byte[aes.IV.Length];
+                int readPos = 0;
+                Array.Copy(data, iv, iv.Length);
+                aes.IV = iv;
+                readPos += aes.IV.Length;
+
+                // Расшифровать реальные данные
+                CryptoStream cryptoStream = new CryptoStream(target, aes.CreateDecryptor(key, iv), CryptoStreamMode.Write);
+                cryptoStream.Write(data, readPos, data.Length - readPos);
+                cryptoStream.FlushFinalBlock();
+
+                // Получить байты из потока в памяти и преобразовать их в текст
+                return Encoding.UTF8.GetString(target.ToArray());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"The decryption failed. {ex}");
+                return null;
+            }
         }
 
         // Asymmetric:
