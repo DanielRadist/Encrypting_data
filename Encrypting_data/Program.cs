@@ -12,7 +12,7 @@ namespace Encrypting_data
             //Console.WriteLine("Hello World!");
             string data = "Test 123";
             // Создали ключ
-            byte[] key = Encrypting.GenerateKey(Encrypting.AES);
+            byte[] key = Encrypting.GenerateKeyAES();
 
             // Зашифровали
             byte[] encryptData = Encrypting.SymmetricEncryption(data, key);
@@ -24,7 +24,7 @@ namespace Encrypting_data
             bool q = encryptData.SequenceEqual(clearData);
 
             // Попробуем дешифровать другим ключом (если true - ошибка в шифровании, подходит любой ключ)
-            string decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKey(Encrypting.AES));
+            string decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKeyAES());
             q = (decyptBadData == data);
 
             // Попробуем дешифровать верным ключом (если false - где-то косяк в шифровании / дешифровании)

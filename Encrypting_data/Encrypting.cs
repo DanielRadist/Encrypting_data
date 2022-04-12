@@ -17,8 +17,6 @@ namespace Encrypting_data
         public static byte[] SymmetricEncryption(string data, byte[] key)
         {
             byte[] clearData = Encoding.UTF8.GetBytes(data);
-            //data = Encoding.UTF8.GetString(tmp);
-
             try
             {
                 // Создать алгоритм шифрования
@@ -37,11 +35,6 @@ namespace Encrypting_data
                 CryptoStream cryptoStream = new CryptoStream(target, aes.CreateEncryptor(), CryptoStreamMode.Write);
                 cryptoStream.Write(clearData, 0, clearData.Length);
                 cryptoStream.FlushFinalBlock();
-                /*
-                target.Write(iv, 0, iv.Length);
-                CryptoStream cryptoStream = new CryptoStream(target, aes.CreateEncryptor(), CryptoStreamMode.Write);
-                StreamWriter encryptWriter = new(cryptoStream);
-                encryptWriter.Write(data);*/
 
                 // Вернуть зашифрованный поток данных в виде байтового массива
                 return target.ToArray();
@@ -87,51 +80,36 @@ namespace Encrypting_data
             }
         }
 
-        // Asymmetric:
-        public static byte[] AsymmetricEncryption(string data, byte[] key)
-        {
-            return null;
-        }
-
-        public static string AsymmetricDecryption(byte[] data, byte[] key)
-        {
-            return null;
-        }
-
         /// <summary>
-        /// Generate Key.
+        /// Generate AES Symmetric Key.
         /// </summary>
-        /// <param name="algorithmName">DES or RSA algorithm.</param>
         /// <returns>Byte array is key.</returns>
-        public static byte[] GenerateKey(string algorithmName)
+        public static byte[] GenerateKeyAES()
         {
-            SymmetricAlgorithm Algorithm = SymmetricAlgorithm.Create(algorithmName);
-            Algorithm.GenerateKey();
-
-            byte[] key = Algorithm.Key;
+            Aes aes = Aes.Create();
+            aes.GenerateKey();
+            byte[] key = aes.Key;
             return key;
         }
 
         /// <summary>
-        /// Read Key.
+        /// Read Key from file.
         /// </summary>
         /// <param name="keyFile">Path to file.</param>
         /// <returns>Byte array is key.</returns>
         public static byte[] ReadKey(string keyFile)
         {
             byte[] Key;
-
             using (FileStream fs = new FileStream(keyFile, FileMode.Open))
             {
                 Key = new byte[fs.Length];
                 fs.Read(Key, 0, (int)fs.Length);
             }
-
             return Key;
         }
 
         /// <summary>
-        /// Save Key.
+        /// Save key to file
         /// </summary>
         /// <param name="targetFile">Path to file.</param>
         /// <param name="key">Key is byte array</param>
@@ -141,6 +119,37 @@ namespace Encrypting_data
             {
                 fs.Write(key, 0, key.Length);
             }
+        }
+
+        // Asymmetric:
+        public static byte[] AsymmetricEncryption(string data, byte[] keyPublic)
+        {
+            // Создать алгоритм на основе открытого ключа
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(Encoding.UTF8.GetString(keyPublic));
+
+            // Зашифровать данные
+            return rsa.Encrypt(Encoding.UTF8.GetBytes(data), true);
+        }
+
+        public static string AsymmetricDecryption(byte[] data, byte[] keyPrivate)
+        {
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(Encoding.UTF8.GetString(keyPrivate));
+            byte[] ClearData = rsa.Decrypt(data, true);
+            return Convert.ToString(Encoding.UTF8.GetString(ClearData));
+        }
+
+        public static KeyValuePair<byte[], byte[]> GenerateKeyRSA()
+        {
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+
+            // Сохранить секретный ключ
+            byte[] keyPrivate = Encoding.UTF8.GetBytes(rsa.ToXmlString(true));
+            // Сохранить открытый ключ
+            byte[] keyPublic = Encoding.UTF8.GetBytes(rsa.ToXmlString(false));
+
+            return new KeyValuePair<byte[], byte[]>(keyPublic, keyPrivate);
         }
     }
 }

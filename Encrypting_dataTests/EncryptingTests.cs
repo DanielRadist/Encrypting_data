@@ -66,11 +66,11 @@ namespace Encrypting_data.Tests
         [DataRow(@"Привет мир! ")]
         public void AsymmetricDecryptionTest(string data)
         {
-            // Создали ключ
-            byte[] key = Encrypting.GenerateKeyAES();
+            // Создали ключи Key - public, value - private
+            KeyValuePair<byte[], byte[]> keys = Encrypting.GenerateKeyRSA();
 
             // Зашифровали
-            byte[] encryptData = Encrypting.AsymmetricEncryption(data, key);
+            byte[] encryptData = Encrypting.AsymmetricEncryption(data, keys.Key);
 
             // Преобразовать строку data в байтовый массив
             byte[] clearData = Encoding.UTF8.GetBytes(data);
@@ -89,17 +89,17 @@ namespace Encrypting_data.Tests
         [DataRow(@"Привет мир! ")]
         public void AsymmetricEncryptionTest(string data)
         {
-            // Создали ключ
-            byte[] key = Encrypting.GenerateKeyAES();
+            // Создали ключи Key - public, value - private
+            KeyValuePair<byte[], byte[]> keys = Encrypting.GenerateKeyRSA();
 
             // Зашифровали
-            byte[] encryptData = Encrypting.AsymmetricEncryption(data, key);
+            byte[] encryptData = Encrypting.AsymmetricEncryption(data, keys.Key);
 
             // Преобразовать строку data в байтовый массив
             byte[] clearData = Encoding.UTF8.GetBytes(data);
 
             // Попробуем дешифровать верным ключом (если false - где-то косяк в шифровании / дешифровании)
-            string decryptData = Encrypting.AsymmetricDecryption(encryptData, key);
+            string decryptData = Encrypting.AsymmetricDecryption(encryptData, keys.Value);
             Assert.IsTrue(decryptData == data, "Source is not equal to decrypted");
         }
     }
