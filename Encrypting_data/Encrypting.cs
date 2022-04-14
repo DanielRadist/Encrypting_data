@@ -14,9 +14,8 @@ namespace Encrypting_data
         public const string RSA = "RSA";
 
         // Symmetric:
-        public static byte[] SymmetricEncryption(string data, byte[] key)
+        public static byte[] SymmetricEncryption(byte[] data, byte[] key)
         {
-            byte[] clearData = Encoding.UTF8.GetBytes(data);
             try
             {
                 // Создать алгоритм шифрования
@@ -33,7 +32,7 @@ namespace Encrypting_data
 
                 // Зашифровать реальные данные
                 CryptoStream cryptoStream = new CryptoStream(target, aes.CreateEncryptor(), CryptoStreamMode.Write);
-                cryptoStream.Write(clearData, 0, clearData.Length);
+                cryptoStream.Write(data, 0, data.Length);
                 cryptoStream.FlushFinalBlock();
 
                 // Вернуть зашифрованный поток данных в виде байтового массива
@@ -46,7 +45,7 @@ namespace Encrypting_data
             }
         }
 
-        public static string SymmetricDecryption(byte[] data, byte[] key)
+        public static byte[] SymmetricDecryption(byte[] data, byte[] key)
         {
             try
             {
@@ -71,7 +70,7 @@ namespace Encrypting_data
                 cryptoStream.FlushFinalBlock();
 
                 // Получить байты из потока в памяти и преобразовать их в текст
-                return Encoding.UTF8.GetString(target.ToArray());
+                return target.ToArray();
             }
             catch (Exception ex)
             {

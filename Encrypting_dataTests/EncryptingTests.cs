@@ -18,14 +18,14 @@ namespace Encrypting_data.Tests
         [DataRow(@"Привет мир! ")]
         public void SymmetricEncryptionTest(string data)
         {
+            // Преобразовать строку data в байтовый массив
+            byte[] clearData = Encoding.UTF8.GetBytes(data);
+
             // Создали ключ
             byte[] key = Encrypting.GenerateKeyAES();
 
             // Зашифровали
-            byte[] encryptData = Encrypting.SymmetricEncryption(data, key);
-
-            // Преобразовать строку data в байтовый массив
-            byte[] clearData = Encoding.UTF8.GetBytes(data);
+            byte[] encryptData = Encrypting.SymmetricEncryption(clearData, key);
 
             // Были проблемы с шифрованием
             Assert.IsFalse(encryptData == null || encryptData.Length < 1);
@@ -41,22 +41,24 @@ namespace Encrypting_data.Tests
         [DataRow(@"Привет мир! ")]
         public void SymmetricDecryptionTest(string data)
         {
+            // Преобразовать строку data в байтовый массив
+            byte[] clearData = Encoding.UTF8.GetBytes(data);
+
             // Создали ключ
             byte[] key = Encrypting.GenerateKeyAES();
 
             // Зашифровали
-            byte[] encryptData = Encrypting.SymmetricEncryption(data, key);
-
-            // Преобразовать строку data в байтовый массив
-            byte[] clearData = Encoding.UTF8.GetBytes(data);
+            byte[] encryptData = Encrypting.SymmetricEncryption(clearData, key);
 
             // Попробуем дешифровать другим ключом (если true - ошибка в шифровании, подходит любой ключ)
-            string decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKeyAES());
-            Assert.IsFalse(decyptBadData == data, "Wrong key - correct");
+            byte[] decyptBadData = Encrypting.SymmetricDecryption(encryptData, Encrypting.GenerateKeyAES());
+            if (decyptBadData != null)
+                Assert.IsFalse(decyptBadData.SequenceEqual(clearData), "Wrong key - correct");
 
             // Попробуем дешифровать верным ключом (если false - где-то косяк в шифровании / дешифровании)
-            string decryptData = Encrypting.SymmetricDecryption(encryptData, key);
-            Assert.IsTrue(decryptData == data, "Source is not equal to decrypted");
+            byte[] decryptData = Encrypting.SymmetricDecryption(encryptData, key);
+
+            Assert.IsTrue(decryptData.SequenceEqual(clearData), "Source is not equal to decrypted");
         }
 
         [TestMethod()]
