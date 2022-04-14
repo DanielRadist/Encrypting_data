@@ -121,22 +121,21 @@ namespace Encrypting_data
         }
 
         // Asymmetric:
-        public static byte[] AsymmetricEncryption(string data, byte[] keyPublic)
+        public static byte[] AsymmetricEncryption(byte[] data, byte[] keyPublic)
         {
             // Создать алгоритм на основе открытого ключа
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(Encoding.UTF8.GetString(keyPublic));
 
             // Зашифровать данные
-            return rsa.Encrypt(Encoding.UTF8.GetBytes(data), true);
+            return rsa.Encrypt(data, true);
         }
 
-        public static string AsymmetricDecryption(byte[] data, byte[] keyPrivate)
+        public static byte[] AsymmetricDecryption(byte[] data, byte[] keyPrivate)
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(Encoding.UTF8.GetString(keyPrivate));
-            byte[] ClearData = rsa.Decrypt(data, true);
-            return Convert.ToString(Encoding.UTF8.GetString(ClearData));
+            return rsa.Decrypt(data, true);
         }
 
         /// <summary>
