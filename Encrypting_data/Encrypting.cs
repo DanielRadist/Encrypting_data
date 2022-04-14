@@ -128,14 +128,14 @@ namespace Encrypting_data
             rsa.FromXmlString(Encoding.UTF8.GetString(keyPublic));
 
             // Зашифровать данные
-            return rsa.Encrypt(data, true);
+            return rsa.Encrypt(data, false);
         }
 
         public static byte[] AsymmetricDecryption(byte[] data, byte[] keyPrivate)
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(Encoding.UTF8.GetString(keyPrivate));
-            return rsa.Decrypt(data, true);
+            return rsa.Decrypt(data, false);
         }
 
         /// <summary>
